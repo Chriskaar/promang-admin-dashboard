@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getCompany, getCompanyUsers, addUserToCompany } from "../../api/companies";
-import { BuildingOfficeIcon, UserPlusIcon, UserIcon } from "@heroicons/react/24/outline";
+import { UserPlusIcon, UserIcon } from "@heroicons/react/24/outline";
 import toast from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -14,11 +14,7 @@ function CompanyDetail() {
   const [loading, setLoading] = useState(true);
   const [showAddUserForm, setShowAddUserForm] = useState(false);
 
-  useEffect(() => {
-    loadCompanyData();
-  }, [id]);
-
-  const loadCompanyData = async () => {
+  const loadCompanyData = useCallback(async () => {
     setLoading(true);
     const [companyResponse, usersResponse] = await Promise.all([
       getCompany(id),
@@ -39,7 +35,11 @@ function CompanyDetail() {
       setUsers(usersResponse.data || []);
     }
     setLoading(false);
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    loadCompanyData();
+  }, [loadCompanyData]);
 
   const formik = useFormik({
     initialValues: {

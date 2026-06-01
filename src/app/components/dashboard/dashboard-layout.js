@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
-import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import { Outlet, useLocation, Link } from "react-router-dom";
 import {
   Bars3BottomLeftIcon,
   XMarkIcon,
@@ -8,8 +8,6 @@ import {
   BuildingOfficeIcon,
   ChartBarSquareIcon,
 } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
-
 const userNavigation = [
   { title: "Sign out", href: "/logout", active: true },
 ];
@@ -45,8 +43,6 @@ export const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const windowSize = useWindowSize();
-  const currentUser = useSelector((state) => state.session.currentUser);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const handleClick = () => {
