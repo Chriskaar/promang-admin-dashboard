@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    scroll-behavior: smooth;
+    min-height: 100%;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+}
+
+body {
+    min-height: 100%;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+}
+
+
