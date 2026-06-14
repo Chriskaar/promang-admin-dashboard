@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import {
   fetchOpsBugs,
@@ -26,14 +26,17 @@ export default function OpsBugs() {
   const [statusFilter, setStatusFilter] = useState("");
   const [busyId, setBusyId] = useState(null);
 
-  const load = () =>
-    fetchOpsBugs(100, statusFilter || undefined).then((res) => {
-      if (res?.success) setData(res.data);
-    });
+  const load = useCallback(() => {
+    fetchOpsBugs(100, statusFilter || undefined)
+      .then((res) => {
+        if (res?.success) setData(res.data);
+      })
+      .catch(() => {});
+  }, [statusFilter]);
 
   useEffect(() => {
-    load().catch(() => {});
-  }, [statusFilter]);
+    load();
+  }, [load]);
 
   const onDispatch = async (bug, useCursor) => {
     setBusyId(`${bug.id || bug.external_id}-${useCursor ? "cursor" : "gh"}`);
