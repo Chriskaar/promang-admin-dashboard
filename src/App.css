@@ -1,3 +1,88 @@
 /* App-specific styles */
 
+.ops-docs-prose {
+  color: #1f2937;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.ops-docs-prose h1,
+.ops-docs-prose h2,
+.ops-docs-prose h3,
+.ops-docs-prose h4 {
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #111827;
+}
+
+.ops-docs-prose h1 { font-size: 1.75rem; }
+.ops-docs-prose h2 { font-size: 1.35rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.25rem; }
+.ops-docs-prose h3 { font-size: 1.15rem; }
+
+.ops-docs-prose p,
+.ops-docs-prose ul,
+.ops-docs-prose ol,
+.ops-docs-prose pre,
+.ops-docs-prose table {
+  margin: 0.75em 0;
+}
+
+.ops-docs-prose ul,
+.ops-docs-prose ol {
+  padding-left: 1.5rem;
+}
+
+.ops-docs-prose li {
+  margin: 0.25em 0;
+}
+
+.ops-docs-prose code {
+  background: #f3f4f6;
+  padding: 0.1em 0.35em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.ops-docs-prose pre {
+  background: #111827;
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.ops-docs-prose pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.ops-docs-prose a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.ops-docs-prose blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 1rem;
+  color: #4b5563;
+}
+
+.ops-docs-prose table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ops-docs-prose th,
+.ops-docs-prose td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.ops-docs-prose th {
+  background: #f9fafb;
+}
+
 

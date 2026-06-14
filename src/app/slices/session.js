@@ -11,7 +11,7 @@ const initialState = {
   loading: true,
   error: false,
   errorMessages: [],
-  accessToken: undefined,
+  accessToken: getAccessToken() || undefined,
   refreshToken: getRefreshToken(),
   expiresIn: undefined,
   tokenType: undefined,
@@ -133,6 +133,7 @@ export const sessionSlice = createSlice({
         state.expiresIn = payload.expires_in;
         state.currentUser = payload;
         if (payload.refresh_token) storeRefreshToken(payload.refresh_token);
+        if (payload.access_token) storeAccessToken(payload.access_token);
         state.loading = false;
         state.error = false;
         state.errorMessages = [];

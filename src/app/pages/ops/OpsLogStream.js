@@ -12,6 +12,8 @@ export default function OpsLogStream({
   paused = false,
   className = "",
   emptyMessage = "No log lines yet.",
+  onFlagLine,
+  busyKey,
 }) {
   const containerRef = useRef(null);
   const stickToBottomRef = useRef(true);
@@ -59,14 +61,36 @@ export default function OpsLogStream({
           orderedLines.map((line, idx) => {
             const kind = classifyLogLine(line);
             const styles = LOG_LINE_STYLES[kind] || LOG_LINE_STYLES.info;
+            const lineKey = `${line.timestamp}-${idx}-${line.message?.slice(0, 24)}`;
+            const flaggable = Boolean(onFlagLine) && (kind === "error" || kind === "warn");
 
             return (
               <div
-                key={`${line.timestamp}-${idx}-${line.message?.slice(0, 24)}`}
-                className={`whitespace-pre-wrap break-words py-0.5 ${styles.row}`}
+                key={lineKey}
+                className={`group whitespace-pre-wrap break-words py-0.5 ${styles.row}`}
               >
                 <span className="text-slate-500">{line.timestamp} </span>
                 <span className={styles.text}>{line.message}</span>
+                {flaggable ? (
+                  <span className="ml-2 inline-flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => onFlagLine(line, true)}
+                      disabled={busyKey === `${line.timestamp}-${line.message?.slice(0, 24)}-cursor`}
+                      className="rounded border border-sky-500/60 px-1.5 py-0.5 text-[10px] text-sky-200 hover:bg-sky-950 disabled:opacity-50"
+                    >
+                      Cursor fix
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onFlagLine(line, false)}
+                      disabled={busyKey === `${line.timestamp}-${line.message?.slice(0, 24)}-incident`}
+                      className="rounded border border-slate-500/60 px-1.5 py-0.5 text-[10px] text-slate-200 hover:bg-slate-900 disabled:opacity-50"
+                    >
+                      Flag incident
+                    </button>
+                  </span>
+                ) : null}
               </div>
             );
           })

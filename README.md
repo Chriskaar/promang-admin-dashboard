@@ -22,9 +22,12 @@ npm install
 REACT_APP_BACKEND_URL=http://localhost:4000/api/v1
 REACT_APP_CLIENT_ID=your_client_id
 REACT_APP_CLIENT_SECRET=your_client_secret
+PORT=3001
 ```
 
-The admin app runs on its own port (CRA default **3000**). The API runs separately — locally that is usually **http://localhost:4000**, with routes under `/api/v1` (e.g. `POST http://localhost:4000/api/v1/oauth/token`).
+The admin app runs on **port 3001** by default when `PORT` is set (use **3000** only if promang-frontend is not running). The API runs separately — locally that is usually **http://localhost:4000**, with routes under `/api/v1` (e.g. `POST http://localhost:4000/api/v1/oauth/token`).
+
+**CORS:** promang-api must allow the admin dashboard origin in `CORS_ORIGINS` (defaults include `http://localhost:3001`). Restart promang-api after changing API env.
 
 3. Start the development server:
 ```bash

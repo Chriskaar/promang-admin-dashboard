@@ -8,9 +8,15 @@ import {
   registerSentryServiceHook,
   sendSentryTest,
   dispatchOpsFix,
+  opsApiError,
 } from "../../api/ops";
 
-function opsDispatchLabel(ops) {
+function opsDispatchLabel(ops, cursor) {
+  if (cursor?.status) {
+    if (cursor.status === "cursor_dispatched") return "Cursor agent dispatched";
+    if (cursor.status === "cursor_failed") return `Cursor failed: ${cursor.error || "unknown"}`;
+    if (cursor.status === "cursor_skipped") return `Cursor skipped: ${cursor.reason || "unknown"}`;
+  }
   if (!ops) return null;
   if (ops.status === "dispatched") return `AI dispatched to ${ops.repo || "GitHub"}`;
   if (ops.status === "failed") return `Dispatch failed: ${ops.error || "unknown"}`;
@@ -97,13 +103,13 @@ export default function OpsHome() {
     try {
       const res = await dispatchOpsFix(incidentId);
       if (res?.success) {
-        toast.success("GitHub AI fix workflow dispatched");
+        toast.success(summary?.cursor_enabled ? "Cursor agent / fix workflow dispatched" : "GitHub AI fix workflow dispatched");
         await loadIncidents();
       } else {
-        toast.error(res?.message || res?.error || "Dispatch failed");
+        toast.error(opsApiError(res, "Dispatch failed"));
       }
-    } catch {
-      toast.error("Failed to dispatch AI fix");
+    } catch (err) {
+      toast.error(opsApiError(err, "Failed to dispatch AI fix"));
     } finally {
       setDispatchingId(null);
     }
@@ -168,7 +174,7 @@ export default function OpsHome() {
           ["Failed jobs (24h)", summary?.failed_jobs_24h ?? "—"],
           ["AI failures (24h)", summary?.ai_failures_24h ?? "—"],
           ["Sentry", summary?.sentry_configured ? "Connected" : "Not configured"],
-          ["AI fixes", summary?.ops_ai_enabled ? "Enabled" : "Disabled"],
+          ["Cursor agents", summary?.cursor_enabled ? "Enabled" : summary?.cursor_configured ? "Configured" : "Off"],
         ].map(([label, value]) => (
           <div key={label} className="rounded-xl bg-white p-4 shadow">
             <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</div>
@@ -186,7 +192,9 @@ export default function OpsHome() {
         {!summary?.sentry_api_configured ? (
           <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
             Set <code className="text-xs">SENTRY_AUTH_TOKEN</code>, <code className="text-xs">SENTRY_ORG</code>, and{" "}
-            <code className="text-xs">SENTRY_PROJECT</code> on the API first.
+            <code className="text-xs">SENTRY_PROJECT</code> on the API first. EU orgs also need{" "}
+            <code className="text-xs">SENTRY_REGION=eu</code> (or an EU DSN in{" "}
+            <code className="text-xs">SENTRY_DSN_API</code>).
           </div>
         ) : (
           <div className="mt-4 space-y-4">
@@ -263,7 +271,43 @@ export default function OpsHome() {
         )}
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Link to="/dashboard/ops/bugs" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Bugs &amp; incidents</h2>
+          <p className="mt-1 text-sm text-gray-500">Full list with Cursor/GitHub fix actions</p>
+        </Link>
+        <Link to="/dashboard/ops/agents" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Cursor agents</h2>
+          <p className="mt-1 text-sm text-gray-500">Agent runs, failures, and PR status</p>
+        </Link>
+        <Link to="/dashboard/ops/activity" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Activity history</h2>
+          <p className="mt-1 text-sm text-gray-500">Webhooks, dispatches, PRs, resolutions</p>
+        </Link>
+        <Link to="/dashboard/ops/health" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Health</h2>
+          <p className="mt-1 text-sm text-gray-500">Platform status and dependency checks</p>
+        </Link>
+        <Link to="/dashboard/ops/telemetry" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Telemetry</h2>
+          <p className="mt-1 text-sm text-gray-500">Better Stack uptime and log sources</p>
+        </Link>
+        <Link to="/dashboard/ops/ai-usage/companies" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Tenant AI usage</h2>
+          <p className="mt-1 text-sm text-gray-500">Cross-company tokens, cost, and user breakdown</p>
+        </Link>
+        <Link to="/dashboard/ops/ai-usage" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Promang internal AI</h2>
+          <p className="mt-1 text-sm text-gray-500">Ops &amp; community AI tokens and estimated cost</p>
+        </Link>
+        <Link to="/dashboard/ops/reports" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Daily reports</h2>
+          <p className="mt-1 text-sm text-gray-500">Bug/fix summary and email dispatch</p>
+        </Link>
+        <Link to="/dashboard/ops/community" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Community reports</h2>
+          <p className="mt-1 text-sm text-gray-500">User bugs &amp; ideas — approve before AI fix</p>
+        </Link>
         <Link to="/dashboard/ops/logs" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
           <h2 className="font-semibold text-gray-900">Server logs</h2>
           <p className="mt-1 text-sm text-gray-500">Live Heroku tail via Logtail</p>
@@ -275,6 +319,10 @@ export default function OpsHome() {
         <Link to="/dashboard/ops/broadcasts" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
           <h2 className="font-semibold text-gray-900">Platform broadcasts</h2>
           <p className="mt-1 text-sm text-gray-500">Maintenance, notices, scheduled updates</p>
+        </Link>
+        <Link to="/dashboard/ops/docs" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">Documentation library</h2>
+          <p className="mt-1 text-sm text-gray-500">Full doc tree, markdown &amp; Cursor skills</p>
         </Link>
       </div>
 
@@ -291,19 +339,19 @@ export default function OpsHome() {
                   <div className="text-xs text-gray-500">
                     {row.level} · {row.status} · {row.project || "unknown"}
                   </div>
-                  {opsDispatchLabel(row.ops) ? (
-                    <div className="mt-1 text-xs text-slate-600">{opsDispatchLabel(row.ops)}</div>
+                  {opsDispatchLabel(row.ops, row.cursor) ? (
+                    <div className="mt-1 text-xs text-slate-600">{opsDispatchLabel(row.ops, row.cursor)}</div>
                   ) : null}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  {summary?.ops_ai_enabled && !row.github_pr_url ? (
+                  {(summary?.ops_ai_enabled || summary?.cursor_enabled) && !row.github_pr_url ? (
                     <button
                       type="button"
                       onClick={() => onDispatchFix(row.id)}
                       disabled={dispatchingId === row.id}
                       className="rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-50 disabled:opacity-50"
                     >
-                      {dispatchingId === row.id ? "Dispatching…" : "Request AI fix"}
+                      {dispatchingId === row.id ? "Dispatching…" : summary?.cursor_enabled ? "Request Cursor fix" : "Request AI fix"}
                     </button>
                   ) : null}
                   {row.github_pr_url ? (

@@ -17,6 +17,17 @@ import OpsLogs from "./app/pages/ops/OpsLogs";
 import OpsErrors from "./app/pages/ops/OpsErrors";
 import OpsTv from "./app/pages/ops/OpsTv";
 import OpsBroadcasts from "./app/pages/ops/OpsBroadcasts";
+import OpsDocs from "./app/pages/ops/OpsDocs";
+import OpsHealth from "./app/pages/ops/OpsHealth";
+import OpsBugs from "./app/pages/ops/OpsBugs";
+import OpsAgents from "./app/pages/ops/OpsAgents";
+import OpsActivity from "./app/pages/ops/OpsActivity";
+import OpsTelemetry from "./app/pages/ops/OpsTelemetry";
+import OpsAiUsage from "./app/pages/ops/OpsAiUsage";
+import OpsAiUsageByCompany from "./app/pages/ops/OpsAiUsageByCompany";
+import OpsReports from "./app/pages/ops/OpsReports";
+import OpsCommunity from "./app/pages/ops/OpsCommunity";
+import HealthPage from "./app/pages/HealthPage";
 import { Toaster } from "react-hot-toast";
 
 function App() {
@@ -55,11 +66,22 @@ function App() {
               <Route index element={<OpsHome />} />
               <Route path="logs" element={<OpsLogs />} />
               <Route path="errors" element={<OpsErrors />} />
+              <Route path="bugs" element={<OpsBugs />} />
+              <Route path="agents" element={<OpsAgents />} />
+              <Route path="activity" element={<OpsActivity />} />
+              <Route path="health" element={<OpsHealth />} />
+              <Route path="telemetry" element={<OpsTelemetry />} />
+              <Route path="ai-usage" element={<OpsAiUsage />} />
+              <Route path="ai-usage/companies" element={<OpsAiUsageByCompany />} />
+              <Route path="reports" element={<OpsReports />} />
+              <Route path="community" element={<OpsCommunity />} />
               <Route path="broadcasts" element={<OpsBroadcasts />} />
+              <Route path="docs" element={<OpsDocs />} />
             </Route>
           </Route>
 
           <Route path="/" element={<HomePage />} />
+          <Route path="/health" element={<HealthPage />} />
           <Route
             path="/login"
             element={
