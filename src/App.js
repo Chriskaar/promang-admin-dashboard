@@ -11,6 +11,9 @@ import Login from "./app/pages/authentication/Login";
 import Logout from "./app/pages/authentication/Logout";
 import CompaniesList from "./app/pages/dashboard/CompaniesList";
 import CompanyDetail from "./app/pages/dashboard/CompanyDetail";
+import ApplicationsHome from "./app/pages/applications/ApplicationsHome";
+import ClientAppsList from "./app/pages/applications/ClientAppsList";
+import ClientAppDetail from "./app/pages/applications/ClientAppDetail";
 import OpsRoute from "./app/routes/opsRoute";
 import OpsHome from "./app/pages/ops/OpsHome";
 import OpsLogs from "./app/pages/ops/OpsLogs";
@@ -27,6 +30,7 @@ import OpsAiUsage from "./app/pages/ops/OpsAiUsage";
 import OpsAiUsageByCompany from "./app/pages/ops/OpsAiUsageByCompany";
 import OpsReports from "./app/pages/ops/OpsReports";
 import OpsCommunity from "./app/pages/ops/OpsCommunity";
+import OpsTests from "./app/pages/ops/OpsTests";
 import HealthPage from "./app/pages/HealthPage";
 import { Toaster } from "react-hot-toast";
 
@@ -62,6 +66,9 @@ function App() {
           >
             <Route path="/dashboard/companies" element={<CompaniesList />} />
             <Route path="/dashboard/companies/:id" element={<CompanyDetail />} />
+            <Route path="/dashboard/applications" element={<ApplicationsHome />} />
+            <Route path="/dashboard/applications/client-apps" element={<ClientAppsList />} />
+            <Route path="/dashboard/applications/client-apps/:id" element={<ClientAppDetail />} />
             <Route path="/dashboard/ops" element={<OpsRoute />}>
               <Route index element={<OpsHome />} />
               <Route path="logs" element={<OpsLogs />} />
@@ -75,6 +82,7 @@ function App() {
               <Route path="ai-usage/companies" element={<OpsAiUsageByCompany />} />
               <Route path="reports" element={<OpsReports />} />
               <Route path="community" element={<OpsCommunity />} />
+              <Route path="tests" element={<OpsTests />} />
               <Route path="broadcasts" element={<OpsBroadcasts />} />
               <Route path="docs" element={<OpsDocs />} />
             </Route>

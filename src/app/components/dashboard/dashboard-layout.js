@@ -7,6 +7,7 @@ import {
   UserIcon,
   BuildingOfficeIcon,
   ChartBarSquareIcon,
+  Squares2X2Icon,
 } from "@heroicons/react/24/outline";
 const userNavigation = [
   { title: "Sign out", href: "/logout", active: true },
@@ -60,11 +61,32 @@ export const DashboardLayout = () => {
       icon: BuildingOfficeIcon,
     },
     {
+      name: "Applications (integrations)",
+      href: "/dashboard/applications",
+      icon: Squares2X2Icon,
+      matchPrefix: "/dashboard/applications",
+    },
+    {
       name: "Ops Center",
       href: "/dashboard/ops",
       icon: ChartBarSquareIcon,
+      matchPrefix: "/dashboard/ops",
     },
   ];
+
+  const isNavActive = (item) => {
+    if (item.matchPrefix) {
+      return location.pathname.startsWith(item.matchPrefix);
+    }
+    return location.pathname === item.href;
+  };
+
+  const desktopContentOffset =
+    typeof windowSize.width === "number" && windowSize.width >= 768
+      ? collapsed
+        ? "4rem"
+        : "16rem"
+      : undefined;
 
   return (
     <div className="min-h-full">
@@ -115,9 +137,7 @@ export const DashboardLayout = () => {
                         to={item.href}
                         onClick={handleClick}
                         className={classNames(
-                          location.pathname === item.href ||
-                            (item.href === "/dashboard/ops" &&
-                              location.pathname.startsWith("/dashboard/ops"))
+                          isNavActive(item)
                             ? "bg-gray-50 text-blue-400"
                             : "text-gray-400 hover:text-blue-400 hover:bg-gray-50",
                           "group flex items-center gap-2 rounded-xl p-2 text-sm font-semibold cursor-pointer transition-all duration-300"
@@ -137,7 +157,7 @@ export const DashboardLayout = () => {
       </Transition.Root>
 
       <div
-        className="hidden md:fixed md:top-16 md:bottom-0 md:flex md:flex-col transition-all duration-300 z-50"
+        className="hidden md:fixed md:left-0 md:top-16 md:bottom-0 md:flex md:flex-col transition-all duration-300 z-50"
         onMouseEnter={() => setCollapsed(false)}
         onMouseLeave={() => setCollapsed(true)}
         style={{ width: collapsed ? "4rem" : "16rem" }}
@@ -150,9 +170,7 @@ export const DashboardLayout = () => {
                   key={item.name}
                   to={item.href}
                   className={classNames(
-                    location.pathname === item.href ||
-                      (item.href === "/dashboard/ops" &&
-                        location.pathname.startsWith("/dashboard/ops"))
+                    isNavActive(item)
                       ? "bg-gray-50 text-blue-400"
                       : "text-gray-400 hover:text-blue-400 hover:bg-gray-50",
                     "group flex items-center gap-2 rounded-xl p-2 text-sm font-semibold cursor-pointer transition-all duration-300"
@@ -174,7 +192,10 @@ export const DashboardLayout = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div
+        className="flex flex-1 flex-col md:transition-[margin-left] md:duration-300 md:ease-in-out"
+        style={{ marginLeft: desktopContentOffset }}
+      >
         <div className="sticky top-0 z-50 flex h-16 flex-shrink-0 bg-white shadow pl-0 pr-4 items-center justify-between">
           <div className="flex items-center space-x-4">
             <button

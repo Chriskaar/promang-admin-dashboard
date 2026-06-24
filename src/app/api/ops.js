@@ -240,3 +240,25 @@ export async function dispatchCommunityFix(id) {
   const res = await axios.post(`/platform_ops/community_reports/${id}/dispatch_fix`);
   return res.data;
 }
+
+export async function fetchTestCatalog(refresh = false) {
+  const res = await axios.get("/platform_ops/test_catalog", {
+    params: refresh ? { refresh: 1 } : undefined,
+  });
+  return res.data;
+}
+
+export async function fetchTestRuns(limit = 50) {
+  const res = await axios.get("/platform_ops/test_runs", { params: { limit } });
+  return res.data;
+}
+
+export async function fetchTestRun(id) {
+  const res = await axios.get(`/platform_ops/test_runs/${id}`);
+  return res.data;
+}
+
+export async function createTestRun(payload) {
+  const res = await axios.post("/platform_ops/test_runs", payload);
+  return res.data;
+}

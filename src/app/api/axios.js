@@ -10,9 +10,14 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((request) => {
-  const accessToken = getAccessToken();
-  if (accessToken) {
-    request.headers["Authorization"] = `Bearer ${accessToken}`;
+  const hasAuthorization =
+    request.headers?.Authorization != null ||
+    request.headers?.authorization != null;
+  if (!hasAuthorization) {
+    const accessToken = getAccessToken();
+    if (accessToken) {
+      request.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
   }
   return request;
 });

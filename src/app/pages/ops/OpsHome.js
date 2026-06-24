@@ -288,6 +288,10 @@ export default function OpsHome() {
           <h2 className="font-semibold text-gray-900">Health</h2>
           <p className="mt-1 text-sm text-gray-500">Platform status and dependency checks</p>
         </Link>
+        <Link to="/dashboard/ops/tests" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
+          <h2 className="font-semibold text-gray-900">API tests</h2>
+          <p className="mt-1 text-sm text-gray-500">Browse and run promang-api Minitest suites locally</p>
+        </Link>
         <Link to="/dashboard/ops/telemetry" className="rounded-xl bg-white p-5 shadow hover:ring-2 hover:ring-sky-200">
           <h2 className="font-semibold text-gray-900">Telemetry</h2>
           <p className="mt-1 text-sm text-gray-500">Better Stack uptime and log sources</p>
